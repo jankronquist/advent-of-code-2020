@@ -24,12 +24,19 @@ let runParseRow row =
 
 let withinRange v { Start=s; End=e } = v >= s && v <= e
 
-let checkPolicy (policy, password) =
+let checkPolicyA (policy, password) =
     let { Range=range; c=c} = policy
     let l = String.filter (fun b -> b = c) password |> String.length
     withinRange l range
 
+let checkPolicyB (policy, password : string) =
+    let { Range={ Start=s; End=e }; c=c} = policy
+    password.[s-1] = c && password.[e-1] <> c || password.[s-1] <> c && password.[e-1] = c
+
 let solve (rows : string list) =
-    let a = rows |> List.collect runParseRow |> List.filter checkPolicy |> List.length
+    let parsed = rows |> List.collect runParseRow
+    let a = parsed |> List.filter checkPolicyA |> List.length
+    let b = parsed |> List.filter checkPolicyB |> List.length
     printfn "A=%i" a
+    printfn "B=%i" b
     0
