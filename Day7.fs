@@ -33,8 +33,21 @@ let solve (rows : string list) =
         let transitiveParents = List.collect findTransitive parents
         List.append parents transitiveParents
 
-    let allParents = findTransitive {Style="shiny"; Color="gold"}
+    let shinyGold = {Style="shiny"; Color="gold"}
+
+    let allParents = findTransitive shinyGold
 
     printfn "A=%i" (Set.ofList allParents |> Set.count)
-    // printfn "B=%i" b
+
+    let directChildren : Map<Bag, (int32 * Bag) list> = Map.ofList parsed
+    let rec findChildBagCount b =
+        match Map.tryFind b directChildren with
+        | Some (children) ->
+            if List.isEmpty children
+            then 0
+            else
+                (List.sumBy (fun (c, child) -> c * (1 + (findChildBagCount child))) children)
+        | _ -> 0
+
+    printfn "B=%i" (findChildBagCount shinyGold)
     0
