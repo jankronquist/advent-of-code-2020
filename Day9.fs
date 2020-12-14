@@ -18,6 +18,22 @@ let rec solveA rows =
     then solveA (List.tail rows)
     else expectedSum
 
+let rec solveB target rows =
+    let rec checkWeakness sum mx numbers =
+        match numbers with
+        | h :: t ->
+            let nextMx = max h mx
+            let next = sum + h
+            if next = target then Some nextMx
+            elif next > target then None
+            else checkWeakness next nextMx t
+        | _ -> None
+    match rows with
+    | h :: t -> match (checkWeakness h h t) with
+                | Some x -> [h, x, h + x]
+                | None -> solveB target t
+    | _ -> []
+
 let runParse parser s =
     match run parser s with
     | Success(result, _, _)   -> Some result
@@ -27,4 +43,6 @@ let solve (rows : string list) =
     let parsed = List.choose (runParse pint64) rows
     let a = solveA parsed
     printfn "A=%A" a
+    let b = solveB a parsed
+    printfn "B=%A" b
     0
