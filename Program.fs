@@ -1,5 +1,5 @@
 open System
-open Day9
+open Day10
 
 let readInput (day : int) =
     let input = sprintf "./input/day%i.txt" day
@@ -10,6 +10,6 @@ let readInput (day : int) =
 
 [<EntryPoint>]
 let main argv =
-    match readInput 9 with
+    match readInput 10 with
     | Some rows -> solve rows
     | _ -> 1
